@@ -21,8 +21,7 @@ $router->get('/books', 'BooksController@index');
 // $router->post('/books', function () {
 // });
 
-// $router->get('/books/{id}', function () {
-// });
+$router->get('/books/{id:[\d]+}', 'BooksController@show');
 
 // $router->put('/books/{id}', function () {
 // });
