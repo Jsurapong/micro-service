@@ -87,4 +87,72 @@ class BooksControllerTest extends TestCase
             ->seeStatusCode(201)
             ->seeHeaderWithRegExp('Location', '#/books/[\d]+$#');
     }
+
+    public function test_update_should_only_change_fillable_fields()
+    {
+        $this->notSeeInDatabase('books', ['title' => 'The War of the Worlds']);
+
+        $this->put('/books/1', [
+            'id' => 5,
+            'title' => 'The War of the Worlds',
+            'description' => 'The book is way better than the movie.',
+            'author' => 'Wells, H. G.'
+        ]);
+
+        $this
+            ->seeStatusCode(200)
+            ->seeJson([
+                'id' => 1,
+                'title' => 'The War of the Worlds',
+                'description' => 'The book is way better than the movie.',
+                'author' => 'Wells, H. G.'
+            ])
+            ->seeInDatabase('books', [
+                'title' => 'The War of the Worlds'
+            ]);
+    }
+
+    public function test_update_should_fail_with_an_invalid_id()
+    {
+        $this
+            ->put('/books/9999999999999')
+            ->seeStatusCode(404)
+            ->seeJsonEquals([
+                'error'=>[
+                    'message' => 'Book not found'
+                ]
+            ]);
+    }
+
+    public function test_update_should_not_match_an_invalid_route()
+    {
+        $this->put('/books/this-is-invalid')
+            ->seeStatusCode(404);
+    }
+
+    public function test_destroy_should_remove_a_valid_book()
+    {
+        $this
+            ->delete('/books/1')
+            ->seeStatusCode(204)
+            ->isEmpty();
+    }
+
+    public function test_destroy_should_return_a_404_with_an_invalid_id()
+    {
+        $this
+            ->delete('/books/99999')
+            ->seeStatusCode(404)
+            ->seeJsonEquals([
+                'error' => [
+                    'message' => 'Book not found'
+                ]
+            ]);
+    }
+
+    public function test_destroy_should_not_match_an_invalid_route()
+    {
+        $this->delete('/books/this-is-invalid')
+            ->seeStatusCode(404);
+    }
 }
