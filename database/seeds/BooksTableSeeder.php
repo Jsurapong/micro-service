@@ -21,8 +21,7 @@ class BooksTableSeeder extends Seeder
         ]);
         DB::table('books')->insert([
             'title' => 'A Wrinkle in Time',
-            'description' => 'A young girl goes on a mission to save her father who has
-            gone missing after working on a mysterious project called a tesseract.',
+            'description' => 'A young girl goes on a mission to save her father who has gone missing after working on a mysterious project called a tesseract.',
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now()
         ]);

@@ -27,5 +27,4 @@ $router->post('/books', 'BooksController@store');
 
 $router->put('/books/{id:[\d]+}', 'BooksController@update');
 
-// $router->delete('/books/{id}', function () {
-// });
+$router->delete('/books/{id}', 'BooksController@destroy');
