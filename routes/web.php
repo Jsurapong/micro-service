@@ -14,3 +14,18 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+
+$router->get('/books', 'BooksController@index');
+
+// $router->post('/books', function () {
+// });
+
+// $router->get('/books/{id}', function () {
+// });
+
+// $router->put('/books/{id}', function () {
+// });
+
+// $router->delete('/books/{id}', function () {
+// });
