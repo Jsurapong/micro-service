@@ -17,41 +17,38 @@ class BooksControllerTest extends TestCase
 
     public function test_index_should_return_a_collection_of_records()
     {
-        $books = factory('App\Book', 3)->create();
+        $books = factory('App\Book', 2)->create();
       
         $this->get('/books');
-        foreach ($books as $book) {
-            $this->seeJson(['title' => $book->title]);
-        }
+        $expected = [
+            'data' => $books->toArray()
+        ];
+
+        $this->seeJsonEquals($expected);
     }
 
     public function test_show_should_return_a_valid_book()
     {
         $book = factory('App\Book')->create();
-
        
+        $expected = [
+            'data' => $book->toArray()
+        ];
+
         $this
             ->get('/books/'.$book->id)
             ->seeStatusCode(200)
-            ->seeJson([
-                'id' => $book->id,
-                'title' => $book->title,
-                'description' => $book->description,
-                'author' => $book->author
-            ]);
-
-        $data = json_decode($this->response->getContent(), true);
-        $this->assertArrayHaskey('created_at', $data);
-        $this->assertArrayHaskey('updated_at', $data);
+            ->seeJsonEquals($expected);
     }
 
     public function test_show_should_fail_when_the_book_id_does_not_exist()
     {
         $this
-            ->get('/books/9999')
+            ->get('/books/99999', ['Accept' => 'application/json'])
             ->seeStatusCode(404)
             ->seeJson([
-                'error'=>['message' => 'Book not found']
+                'message' => 'Not Found',
+                'status' => 404
             ]);
     }
 
@@ -74,9 +71,16 @@ class BooksControllerTest extends TestCase
             'author'=> 'H. G. Wells'
         ]);
 
-        $this
-            ->seeJson(['created' => true])
-            ->seeInDatabase('books', ['title'=>'The Invisible Man']);
+        $body = json_decode($this->response->getContent(), true);
+        $this->assertArrayHasKey('data', $body);
+
+        $data = $body['data'];
+        $this->assertEquals('The Invisible Man', $data['title']);
+        $this->assertEquals('An invisible man is trapped in the terror of his own creation', $data['description']);
+        $this->assertEquals('H. G. Wells', $data['author']);
+        $this->assertTrue($data['id'] > 0, 'Expected a positive integer, but did not see one.');
+
+        $this->seeInDatabase('books', ['title' => 'The Invisible Man']);
     }
 
     public function test_store_should_respond_with_a_201_and_location_header_when_successful()
@@ -100,7 +104,13 @@ class BooksControllerTest extends TestCase
             'author' => 'H. G. Wells',
         ]);
 
-        
+        $this->notSeeInDatabase('books', [
+            'title' => 'The War of the Worlds',
+            'description' => 'The book is way better than the movie.',
+            'author' => 'Wells, H. G.'
+        ]);
+
+
         $this->put('/books/'.$book->id, [
             'id' => 5,
             'title' => 'The War of the Worlds',
@@ -108,6 +118,7 @@ class BooksControllerTest extends TestCase
             'author' => 'Wells, H. G.'
         ]);
 
+        
         $this
             ->seeStatusCode(200)
             ->seeJson([
@@ -119,6 +130,9 @@ class BooksControllerTest extends TestCase
             ->seeInDatabase('books', [
                 'title' => 'The War of the Worlds'
             ]);
+        
+        $body = json_decode($this->response->getContent(), true);
+        $this->assertArrayHasKey('data', $body);
     }
 
     public function test_update_should_fail_with_an_invalid_id()
