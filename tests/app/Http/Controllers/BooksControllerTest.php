@@ -4,6 +4,7 @@ namespace Tests\App\Http\Controllers;
 
 use TestCase;
 use Laravel\Lumen\Testing\DatabaseMigrations;
+use Log;
 
 class BooksControllerTest extends TestCase
 {
@@ -16,8 +17,8 @@ class BooksControllerTest extends TestCase
 
     public function test_index_should_return_a_collection_of_records()
     {
-        $books = factory('App\Book', 2)->create();
-
+        $books = factory('App\Book', 3)->create();
+      
         $this->get('/books');
         foreach ($books as $book) {
             $this->seeJson(['title' => $book->title]);
@@ -28,6 +29,7 @@ class BooksControllerTest extends TestCase
     {
         $book = factory('App\Book')->create();
 
+       
         $this
             ->get('/books/'.$book->id)
             ->seeStatusCode(200)
@@ -98,6 +100,7 @@ class BooksControllerTest extends TestCase
             'author' => 'H. G. Wells',
         ]);
 
+        
         $this->put('/books/'.$book->id, [
             'id' => 5,
             'title' => 'The War of the Worlds',
