@@ -4,7 +4,6 @@ namespace Tests\App\Http\Controllers;
 
 use TestCase;
 use Laravel\Lumen\Testing\DatabaseMigrations;
-use Log;
 
 class BooksControllerTest extends TestCase
 {
