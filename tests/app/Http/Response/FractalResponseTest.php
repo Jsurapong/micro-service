@@ -2,6 +2,8 @@
 
 namespace Tests\App\Http\Response;
 
+namespace App;
+
 use TestCase;
 use Mockery as m;
 use League\Fractal\Manager;
@@ -20,6 +22,7 @@ class FractalResponseTest extends TestCase
             ->with($serializer)
             ->once()
             ->andReturn($manager);
+
         $fractal = new FractalResponse($manager, $serializer);
         $this->assertInstanceOf(FractalResponse::class, $fractal);
     }
@@ -34,29 +37,27 @@ class FractalResponseTest extends TestCase
             ->once()
             ->andReturn(['foo' => 'bar']);
 
+        // Serializer
         $serializer = m::mock('League\Fractal\Serializer\SerializerAbstract');
-
         $manager = m::mock('League\Fractal\Manager');
         $manager
             ->shouldReceive('setSerializer')
             ->with($serializer)
             ->once();
-
         $manager
             ->shouldReceive('createData')
             ->once()
             ->andReturn($scope);
-        
         $subject = new FractalResponse($manager, $serializer);
         $this->assertInternalType(
-                'array',
-                $subject->item(['foo' => 'bar'], $transformer)
-            );
+            'array',
+            $subject->item(['foo' => 'bar'], $transformer)
+        );
     }
 
     public function test_it_can_transform_a_collection()
     {
-        $data  = [
+        $data = [
             ['foo' => 'bar'],
             ['fizz' => 'buzz']
         ];
@@ -68,20 +69,18 @@ class FractalResponseTest extends TestCase
             ->shouldReceive('toArray')
             ->once()
             ->andReturn($data);
+    
 
         $serializer = m::mock('League\Fractal\Serializer\SerializerAbstract');
-
         $manager = m::mock('League\Fractal\Manager');
         $manager
             ->shouldReceive('setSerializer')
             ->with($serializer)
             ->once();
-        
         $manager
             ->shouldReceive('createData')
             ->once()
             ->andReturn($scope);
-        
         $subject = new FractalResponse($manager, $serializer);
         $this->assertInternalType(
             'array',
