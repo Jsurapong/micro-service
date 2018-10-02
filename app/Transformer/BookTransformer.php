@@ -12,10 +12,9 @@ class BookTransformer extends TransformerAbstract
                 'id' => $book->id,
                 'title' => $book->title,
                 'description' => $book->description,
-                'author' => $book->author,
+                'author' => $book->description,
                 'created' => $book->created_at->toIso8601String(),
-                'updated' => $book->updated_at->toIso8601String(),
-                'released' => $book->created_at->diffForHumans()
+                'updated' => $book->updated_at->toIso8601String()
             ];
     }
 }
