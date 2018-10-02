@@ -7,6 +7,9 @@ use \Mockery as m;
 use App\Exceptions\Handler;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class HandlerTest extends TestCase
 {
@@ -42,13 +45,13 @@ class HandlerTest extends TestCase
 
         $request = m::mock(Request::class);
         $request
-            ->shouldRecive('wantsJson')
-            ->andReturn(true);
-
+                ->shouldReceive('wantsJson')
+                ->andReturn(true);
+                
         $exception = m::mock(\Exception::class, ['Doh!']);
         $exception
-            ->shouldReceive('getMessage')
-            ->andReturn(true);
+                ->shouldReceive('getMessage')
+                ->andReturn('Doh!');
 
         $result = $subject->render($request, $exception);
         $data = $result->getData();
@@ -86,7 +89,7 @@ class HandlerTest extends TestCase
                 'mock' => ModelNotFoundException::class,
                 'status' => 404,
                 'message' => 'Not Found'
-            ],
+            ]
         ];
 
 
@@ -94,7 +97,7 @@ class HandlerTest extends TestCase
             $exception = m::mock($example['mock']);
             $exception->shouldReceive('getMessage')->andReturn(null);
             $exception->shouldReceive('getStatusCode')->andReturn($example['status']);
-        
+         
             $result = $subject->render($request, $exception);
             $data = $result->getData();
         
