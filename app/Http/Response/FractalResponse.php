@@ -13,7 +13,6 @@ use League\Fractal\Serializer\SerializerAbstract;
 class FractalResponse
 {
     private $manager;
-
     private $serializer;
 
     public function __construct(Manager $manager, SerializerAbstract $serializer)
@@ -29,10 +28,10 @@ class FractalResponse
             new Item($data, $transformer, $resourceKey)
         );
     }
-    public function collection($data, TransformerAbstract $transformer, $resourceKey =null)
+    public function collection($data, TransformerAbstract $transformer, $resourceKey = null)
     {
         return $this->createDataArray(
-            new Collection($data, $transformer, $resourceKey)
+           new Collection($data, $transformer, $resourceKey)
         );
     }
 

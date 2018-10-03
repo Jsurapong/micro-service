@@ -12,7 +12,7 @@ class BookTransformer extends TransformerAbstract
                 'id' => $book->id,
                 'title' => $book->title,
                 'description' => $book->description,
-                'author' => $book->description,
+                'author' => $book->author,
                 'created' => $book->created_at->toIso8601String(),
                 'updated' => $book->updated_at->toIso8601String()
             ];

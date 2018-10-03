@@ -53,6 +53,8 @@ class HandlerTest extends TestCase
                 ->shouldReceive('getMessage')
                 ->andReturn('Doh!');
 
+       
+
         $result = $subject->render($request, $exception);
         $data = $result->getData();
 
@@ -61,8 +63,6 @@ class HandlerTest extends TestCase
         $this->assertAttributeEquals('Doh!', 'message', $data->error);
         $this->assertAttributeEquals(400, 'status', $data->error);
     }
-
-
 
     public function test_it_provides_json_responses_for_http_exceptions()
     {
@@ -99,6 +99,7 @@ class HandlerTest extends TestCase
             $exception->shouldReceive('getStatusCode')->andReturn($example['status']);
          
             $result = $subject->render($request, $exception);
+
             $data = $result->getData();
         
             $this->assertEquals($example['status'], $result->getStatusCode());
