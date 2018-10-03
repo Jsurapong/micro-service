@@ -48,7 +48,6 @@ class Handler extends ExceptionHandler
     {
         if ($request->wantsJson() && !($exception instanceof ValidationException)) {
             $response = [
-                
                 'message' => (string) $exception->getMessage(),
                 'status' => 400
             ];

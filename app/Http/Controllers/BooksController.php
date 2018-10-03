@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Book;
 use Illuminate\Http\Request;
+use App\Transformer\BookTransformer;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class BooksController
+class BooksController extends Controller
 {
     /**
      * GET /books
@@ -14,12 +15,12 @@ class BooksController
      */
     public function index()
     {
-        //return Book::all();
-        return ['data' => Book::all()->toArray()];
+        return $this->collection(Book::all(), new BookTransformer());
     }
 
     public function show($id)
     {
+        return $this->item(Book::findOrFail($id), new BookTransformer());
         return ['data' => Book::findOrFail($id)->toArray()];
     }
 
@@ -27,8 +28,9 @@ class BooksController
     public function store(Request $request)
     {
         $book = Book::create($request->all());
+        $data = $this->item($book, new BookTransformer());
 
-        return response()->json(['data' => $book->toArray()], 201, [
+        return response()->json($data, 201, [
             'Location' => route('books.show', ['id' => $book->id])
         ]);
     }
@@ -47,7 +49,7 @@ class BooksController
        
         $book->fill($request->all());
         $book->save();
-        return ['data' => $book->toArray()];
+        return $this->item($book, new BookTransformer());
     }
 
     public function destroy($id)
