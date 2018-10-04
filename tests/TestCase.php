@@ -38,4 +38,25 @@ abstract class TestCase extends Laravel\Lumen\Testing\TestCase
             );
         return $this;
     }
+
+    public function bookFactory($count = 1)
+    {
+        $author = factory(\App\Author::class)->create();
+
+        switch ($count) {
+            case 1:
+                $book = factory(\App\Book::class)->make();
+                $book->author()->associate($author);
+                $book->save();
+                return $book;
+            default:
+                $books = factory(\App\Book::class, $count)->make();
+                $books->each(function ($books) use ($author) {
+                    $books->author()->associate($author);
+                    $books->save();
+                });
+                return $books;
+            
+        }
+    }
 }
