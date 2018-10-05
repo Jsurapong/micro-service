@@ -6,8 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Author extends Model
 {
-    protected $fillable = ['name','biography','gender'];
-
+    use Rateable;
+    
+    protected $fillable = ['name', 'biography', 'gender'];
 
     public function books()
     {

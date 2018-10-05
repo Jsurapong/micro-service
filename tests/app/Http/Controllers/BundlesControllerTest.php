@@ -13,8 +13,6 @@ class BundlesControllerTest extends TestCase
     {
         $bundle = $this->bundleFactory();
 
-        \Log::info(print_r($bundle, true));
-
 
         $this->get('/bundles/'.$bundle->id, ['Accept' => 'application/json']);
         $this->seeStatusCode(200);
@@ -22,9 +20,7 @@ class BundlesControllerTest extends TestCase
         
         $this->assertArrayHasKey('data', $body);
         $data = $body['data'];
-
-
-
+        
         $this->assertEquals($bundle->id, $data['id']);
         $this->assertEquals($bundle->title, $data['title']);
         $this->assertEquals($bundle->description, $data['description']);
