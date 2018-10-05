@@ -45,6 +45,12 @@ $router->group([
     ]);
     $router->put('/{id:[\d]+}', 'AuthorsController@update');
     $router->delete('/{id:[\d]+}', 'AuthorsController@destroy');
+
+    $router->post('/{id:[\d]+}/ratings', 'AuthorsRatingsController@store');
+    $router->delete(
+        '/{authorId:[\d]+}/ratings/{ratingId:[\d]+}',
+        'AuthorsRatingsController@destroy'
+    );
 });
 
 $router->group([

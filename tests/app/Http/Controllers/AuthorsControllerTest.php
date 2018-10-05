@@ -117,6 +117,7 @@ class AuthorsControllerTest extends TestCase
             $this->assertEquals(['The '.$field.' field is required.'], $data[$field]);
         }
     }
+
     public function test_store_can_create_a_new_author()
     {
         $postData = [
@@ -135,7 +136,6 @@ class AuthorsControllerTest extends TestCase
         $this->seeInDatabase('authors', $postData);
     }
 
-  
     public function test_store_is_valid_when_name_is_just_long_enough()
     {
         $postData = [
@@ -149,7 +149,6 @@ class AuthorsControllerTest extends TestCase
         $this->seeStatusCode(201);
         $this->seeInDatabase('authors', $postData);
     }
-
 
     public function test_store_returns_a_valid_location_header()
     {
@@ -173,7 +172,6 @@ class AuthorsControllerTest extends TestCase
         $this->seeHeaderWithRegExp('Location', '#/authors/'.$id.'$#');
     }
 
-
     public function test_delete_can_remove_an_author_and_his_or_her_books()
     {
         $author = factory(\App\Author::class)->create();
@@ -191,5 +189,11 @@ class AuthorsControllerTest extends TestCase
         $this
             ->delete('/authors/99999', [], ['Accept' => 'application/json'])
             ->seeStatusCode(404);
+    }
+
+    public function test_store_fails_when_the_author_is_invalid()
+    {
+        $this->post('/authors/1/ratings', [], ['Accept' => 'application/json']);
+        $this->seeStatusCode(404);
     }
 }
