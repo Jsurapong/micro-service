@@ -16,8 +16,6 @@ abstract class TestCase extends Laravel\Lumen\Testing\TestCase
         return require __DIR__.'/../bootstrap/app.php';
     }
 
-
-
     public function seeHasHeader($header)
     {
         $this->assertTrue(
@@ -26,7 +24,6 @@ abstract class TestCase extends Laravel\Lumen\Testing\TestCase
         );
         return $this;
     }
-
 
     public function seeHeaderWithRegExp($header, $regexp)
     {
@@ -59,7 +56,6 @@ abstract class TestCase extends Laravel\Lumen\Testing\TestCase
             
         }
     }
-
 
     public function bundleFactory($bookCount = 2)
     {
