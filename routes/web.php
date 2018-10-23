@@ -15,6 +15,10 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
+$router->post('/login', function () use ($router) {
+    \Log::info('ddddddd');
+    return ['data' => ['status' =>'SUCCESS','token' => rand(99999, 999999)]];
+});
 
 
 $router->group([
